@@ -4,6 +4,34 @@ import RomanceScamReport from "../../../../Models/RomanceFormSchema";
 import { v2 as cloudinary } from 'cloudinary';
 import { UploadApiResponse } from 'cloudinary';
 
+
+interface FormFields {
+  fullName: string;
+  email: string;
+  country: string;
+  address: string;
+  locationOfPartner: string;
+  personName: string;
+  contactDuration: string;
+  meetingPlace: string;
+  otherMeetingPlace: string;
+  metInRealLife: string;
+  whyNotMet: string;
+  communicationFrequency: string;
+  discussionTopics: string;
+  sharedPhotosVideos: string;
+  photosAuthentic: string;
+  askedForMoney: string;
+  moneyAmount: string;
+  moneyPurpose: string;
+  personalInfoShared: string;
+  suspiciousBehavior: string;
+  photoUpload: {
+    url: string;
+    publicId: string;
+  } | null;
+}
+
 interface RiskIndicators {
   timelineRisk: string;
   locationRisk: string;
@@ -429,7 +457,7 @@ export async function POST(request: NextRequest) {
     }
 
     // Extract form fields
-    const formFields = {
+    const formFields: FormFields = {
       fullName: formData.get('fullName') as string,
       email: formData.get('email') as string,
       country: formData.get('country') as string,
@@ -454,7 +482,7 @@ export async function POST(request: NextRequest) {
     };
 
     // Validate required fields
-    const requiredFields = [
+    const requiredFields: (keyof FormFields)[] = [
       'fullName', 'email', 'country', 'address', 'personName',
       'contactDuration', 'meetingPlace', 'metInRealLife',
       'communicationFrequency', 'discussionTopics', 'sharedPhotosVideos',
