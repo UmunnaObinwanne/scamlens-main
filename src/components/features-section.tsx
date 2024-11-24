@@ -1,7 +1,14 @@
+// components/Features.tsx
 import { Heart, ShoppingBag, Globe, Phone } from "lucide-react";
 import Link from "next/link";
+import { getKindeServerSession } from "@kinde-oss/kinde-auth-nextjs/server";
+import { Button } from "@/components/ui/button";
+import { RegisterLink, LoginLink } from "@kinde-oss/kinde-auth-nextjs/components";
 
-export function Features() {
+export async function Features() {
+  const { isAuthenticated } = getKindeServerSession();
+  const authenticated = await isAuthenticated();
+
   const categories = [
     {
       icon: <Heart size={24} className="text-primary" />,
@@ -42,17 +49,15 @@ export function Features() {
       </p>
       <div className="relative z-10 mx-auto grid max-w-7xl grid-cols-1 py-10 md:grid-cols-2 lg:grid-cols-4">
         {categories.map((category, index) => (
-          <Link 
-            href={category.href}
+          <div 
             key={index} 
-            className="group/feature relative flex flex-col py-10 lg:border-r lg:border-b cursor-pointer 
+            className="group/feature relative flex flex-col py-10 lg:border-r lg:border-b
                        hover:shadow-lg transition-all duration-300 ease-in-out
                        first:lg:border-l"
           >
             <div className="pointer-events-none absolute inset-0 size-full from-primary/20 to-transparent 
                           opacity-0 transition duration-200 group-hover/feature:opacity-100 bg-gradient-to-t" />
             
-            {/* New hover effect element */}
             <div className="absolute right-4 top-4 opacity-0 transform translate-x-2 
                           transition-all duration-300 group-hover/feature:opacity-100 
                           group-hover/feature:translate-x-0">
@@ -71,7 +76,24 @@ export function Features() {
             <p className="relative z-10 max-w-xs px-10 text-sm text-muted-foreground">
               {category.description}
             </p>
-          </Link>
+
+            {authenticated ? (
+              <Link href={category.href} className="mt-4 mx-10">
+                <Button className="w-full">
+                  Verify Now
+                </Button>
+              </Link>
+            ) : (
+              <LoginLink
+                postLoginRedirectURL={`/api/auth/success?returnTo=${category.href}`}
+                className="mt-4 mx-10"
+              >
+                <Button className="w-full">
+                  Verify
+                </Button>
+              </LoginLink>
+            )}
+          </div>
         ))}
       </div>
     </section>
