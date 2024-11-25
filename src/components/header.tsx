@@ -8,10 +8,25 @@ import {
   LogoutLink,
 } from "@kinde-oss/kinde-auth-nextjs/components";
 import { getKindeServerSession } from "@kinde-oss/kinde-auth-nextjs/server";
+import { connectToMongoDB } from "../../Lib/db";
+import Analyst from "../../Models/AnalystsSchema";
 
 export async function Header() {
   const { isAuthenticated, getUser } = getKindeServerSession();
   const user = await getUser();
+
+  // Get the user's role from your database
+  let dbUser = null;
+  if (user) {
+    try {
+      await connectToMongoDB();
+      dbUser = await Analyst.findOne({ kindeId: user.id });
+    } catch (error) {
+      console.error('Error fetching user role:', error);
+    }
+  }
+
+  const isAdmin = dbUser?.role === 'admin';
 
   return (
     <header className="sticky top-0 z-50 w-full border-b bg-background/95 backdrop-blur supports-[backdrop-filter]:bg-background/60">
@@ -52,6 +67,14 @@ export async function Header() {
           >
             Pricing
           </Link>
+                    {(await isAuthenticated()) && isAdmin && (
+            <Link
+              href="/dashboard"
+              className="text-sm font-medium text-muted-foreground transition-colors hover:text-primary"
+            >
+              Dashboard
+            </Link>
+          )}
         </nav>
 
         {/* Desktop Auth Buttons */}
@@ -107,6 +130,14 @@ export async function Header() {
       <>
         {/* Mobile Navigation Links */}
         <nav className="flex flex-col space-y-1 p-4">
+          {isAdmin && (
+                    <Link
+                      href="/dashboard"
+                      className="rounded-md px-4 py-2 text-sm font-medium text-muted-foreground hover:bg-accent hover:text-accent-foreground"
+                    >
+                      Dashboard
+                    </Link>
+                  )}
           <Link
             href="/about"
             className="rounded-md px-4 py-2 text-sm font-medium text-muted-foreground hover:bg-accent hover:text-accent-foreground"

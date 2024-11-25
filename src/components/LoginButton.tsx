@@ -8,7 +8,7 @@ export default function LoginButton() {
   return (
     <LoginLink 
       className="your-classes-here"
-      postLoginRedirectUrl="/api/auth/kinde-callback"
+      postLoginRedirectURL="/api/auth/kinde-callback"
     >
       Sign In
     </LoginLink>
