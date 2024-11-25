@@ -42,7 +42,7 @@ export default function HowItWorksSection() {
              width={1000}
              height={500}
              className="w-full"
-             priority
+             loading="lazy" // Add this for images that aren't immediately visible
            />
          </div>
 

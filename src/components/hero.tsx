@@ -23,7 +23,7 @@ export function Hero() {
           src="/images/search-2.jpg"
           width={1000}
           height={698}
-          priority
+          priority // Add this for important above-the-fold images
           className="rounded-xl border border-border shadow-lg"
         />
         <div className="absolute inset-0 -z-10 bg-primary/20 [filter:blur(180px)]" />

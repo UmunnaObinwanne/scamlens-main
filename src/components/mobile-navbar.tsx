@@ -1,9 +1,14 @@
+// components/mobile-navbar.tsx
 "use client";
 
 import { Menu, X } from "lucide-react";
-import { ReactNode, useEffect, useState } from "react";
+import { ReactNode, useState } from "react";
 
-export function MobileNavbar({ children }: { children: ReactNode }) {
+interface MobileNavbarProps {
+  children: ReactNode;
+}
+
+export function MobileNavbar({ children }: MobileNavbarProps) {
   const [isOpen, setIsOpen] = useState(false);
 
   return (
@@ -16,7 +21,7 @@ export function MobileNavbar({ children }: { children: ReactNode }) {
       </button>
       
       {isOpen && (
-        <div className="absolute left-0 right-0 top-16 z-50 bg-background border-t md:hidden">
+        <div className="absolute left-0 right-0 top-16 bg-background border-t md:hidden">
           {children}
         </div>
       )}

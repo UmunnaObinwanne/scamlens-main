@@ -1,5 +1,6 @@
 import "./globals.css";
 import { Header } from "@/components/header";
+import { MainHeader } from "@/components/Navigation/Header";
 import { Footer } from "@/components/footer";
 
 import type { Metadata } from "next";
@@ -10,6 +11,7 @@ import { cn } from "@/lib/utils";
 const fontSans = Inter({
   variable: "--font-sans",
   subsets: ["latin"],
+  display: 'swap',
 });
 
 const fontHeading = localFont({
@@ -40,7 +42,7 @@ export default function RootLayout({
           fontHeading.variable
         )}
       >
-        <Header/>
+        <MainHeader/>
         {children}
         <Footer />
       </body>

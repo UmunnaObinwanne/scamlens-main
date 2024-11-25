@@ -7,9 +7,9 @@ export const PlatformReportCard = ({ report }: { report: PlatformReport }) => (
    <div className="bg-white rounded-lg p-6 shadow-sm">
      <h2 className="text-xl font-semibold mb-4">Platform Details</h2>
      <div className="space-y-3">
-       <InfoField label="Full Name" value={report.fullName} />
+       <InfoField label="Claimant's Name" value={report.fullName} />
        <InfoField label="Email" value={report.email} />
-       <InfoField label="Website URL" value={report.websiteURL} />
+       <InfoField label="Platform URL" value={report.websiteURL} />
        <InfoField label="Platform Type" value={report.platformType} />
      </div>
    </div>

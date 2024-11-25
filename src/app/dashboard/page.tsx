@@ -46,6 +46,7 @@ export default function DashboardPage() {
            location: report.locationOfPartner || report.location || 'Unknown'
          }));
          setReports(transformedReports);
+         console.log("transformed reports", transformedReports)
        }
      } catch (error) {
        console.error('Error fetching reports:', error);
@@ -105,8 +106,8 @@ const handleStatusUpdate = async (
  };
 
  function determineReportType(report: any): Report['type'] {
-   if (report.fullName) return 'romance';
-   if (report.platform) return 'platform';
+   if (report.personName) return 'romance';
+   if (report.websiteURL) return 'platform';
    if (report.vendorName) return 'vendor';
    return 'social-media';
  }
@@ -148,6 +149,8 @@ const ReportCard = ({ report }: { report: Report }) => (
                         report.location.toLowerCase().includes(searchTerm.toLowerCase());
    const matchesStatus = filterStatus === 'all' || report.status === filterStatus;
    return matchesSearch && matchesStatus;
+
+   console.log(filteredReports)
  });
 
  return (

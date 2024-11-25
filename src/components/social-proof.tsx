@@ -2,25 +2,55 @@ import Image from "next/image";
 
 export function SocialProof() {
   return (
-    <section className="container flex flex-col items-center gap-10 py-24">
-      <h2 className="text-center  font-semibold  text-4xl mx-auto md:text-6xl lg:text-2xl">
-        Trusted by customer&apos;s on
+    <section className="container flex flex-col items-center gap-8 py-16">
+      {/* Heading */}
+      <h2 className="text-center font-heading text-2xl font-bold tracking-tight sm:text-3xl md:text-4xl">
+        Trusted by Customers On
       </h2>
-      <div className="grid w-full grid-cols-4 gap-10 sm:grid-cols-6 sm:gap-12 lg:grid-cols-4">
-        <div className="relative col-span-2 h-11 flex-1 sm:h-10 lg:col-span-1">
-          <Image alt="Company Logo" src="/images/microsoft.webp" fill className="object-contain" />
+
+      {/* Logo Grid */}
+      <div className="grid w-full grid-cols-2 gap-6 sm:grid-cols-4 md:gap-8 lg:gap-10">
+        <div className="relative h-12 sm:h-14">
+          <Image 
+            alt="Microsoft Logo" 
+            src="/images/microsoft.webp" 
+            fill 
+            sizes="(max-width: 640px) 50vw, (max-width: 1024px) 25vw, 10vw" 
+            className="object-contain"
+            loading="lazy" // Add this for images that aren't immediately visible
+          />
         </div>
-        <div className="relative col-span-2 h-11 flex-1 sm:h-10 lg:col-span-1">
-          <Image alt="Company Logo" src="/images/google.png" fill className="object-contain" />
+        <div className="relative h-12 sm:h-14">
+          <Image 
+            alt="Google Logo" 
+            src="/images/google.png" 
+            fill 
+            sizes="(max-width: 640px) 50vw, (max-width: 1024px) 25vw, 10vw" 
+            className="object-contain"
+            loading="lazy" // Add this for images that aren't immediately visible
+          />
         </div>
-        <div className="relative col-span-2 h-11 flex-1 sm:h-10 lg:col-span-1">
-          <Image alt="Company Logo" src="/images/amazon.png" fill className="object-contain" />
+        <div className="relative h-12 sm:h-14">
+          <Image 
+            alt="Amazon Logo" 
+            src="/images/amazon.png" 
+            fill 
+            sizes="(max-width: 640px) 50vw, (max-width: 1024px) 25vw, 10vw" 
+            className="object-contain"
+            loading="lazy" // Add this for images that aren't immediately visible
+          />
         </div>
-        <div className="relative col-span-2 h-11 flex-1 sm:h-10 lg:col-span-1 col-start-2 sm:col-start-auto">
-          <Image alt="Company Logo" src="/images/facebook.png" fill className="object-contain" />
+        <div className="relative h-12 sm:h-14">
+          <Image 
+            alt="Facebook Logo" 
+            src="/images/facebook.png" 
+            fill 
+            sizes="(max-width: 640px) 50vw, (max-width: 1024px) 25vw, 10vw" 
+            className="object-contain"
+            loading="lazy" // Add this for images that aren't immediately visible
+          />
         </div>
       </div>
     </section>
   );
 }
-
