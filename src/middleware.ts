@@ -30,5 +30,6 @@ export const config = {
     "/onlinevendor",
     "/onlineplatform-verify",
     "/verify/phone",
+     "/api/auth/kinde_callback"
   ]
 };

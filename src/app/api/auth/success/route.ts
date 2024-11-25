@@ -73,7 +73,7 @@ export async function GET(request: Request): Promise<NextResponse> {
     });
 
     // Determine redirect URL based on role and returnTo parameter
-    const baseUrl = process.env.NEXT_PUBLIC_APP_URL || "https://scamlens-main.vercel.app/";
+    const baseUrl = process.env.NEXT_PUBLIC_APP_URL;
     let redirectPath;
 
     if (dbAnalyst.role === "admin") {
