@@ -5,32 +5,44 @@ import { connectToMongoDB } from "../../../../../Lib/db";
 import Analyst, { IAnalyst } from "../../../../../Models/AnalystsSchema";
 
 export async function GET(request: Request): Promise<NextResponse> {
-  console.log("Success route handler started");
+  console.log("Success route handler started in:", process.env.NODE_ENV);
 
   try {
+    // Get the returnTo URL from query parameters
     const { searchParams } = new URL(request.url);
     const returnTo = searchParams.get('returnTo');
     console.log("Return URL:", returnTo);
 
+    // Get the authenticated user from Kinde
     const { getUser } = getKindeServerSession();
     const user = await getUser();
+    console.log("Kinde User:", user);
 
     if (!user || !user.id || !user.email) {
+      console.log("No user found, redirecting to home");
       return NextResponse.redirect(new URL('/', process.env.NEXT_PUBLIC_APP_URL!));
     }
 
-    console.log("Authenticated user:", {
-      id: user.id,
-      email: user.email,
-      givenName: user.given_name,
-      familyName: user.family_name,
-    });
+    // Connect to MongoDB
+    try {
+      await connectToMongoDB();
+      console.log("MongoDB connected");
+    } catch (dbError) {
+      console.error("MongoDB connection error:", dbError);
+      throw dbError;
+    }
 
-    await connectToMongoDB();
-
-    let dbAnalyst = await Analyst.findOne({
-      $or: [{ kindeId: user.id }, { email: user.email }],
-    });
+    // Check if the user already exists in the database
+    let dbAnalyst = null;
+    try {
+      dbAnalyst = await Analyst.findOne({
+        $or: [{ kindeId: user.id }, { email: user.email }],
+      });
+      console.log("Found analyst:", dbAnalyst);
+    } catch (findError) {
+      console.error("Error finding analyst:", findError);
+      throw findError;
+    }
 
     if (!dbAnalyst) {
       const analystData: Partial<IAnalyst> = {
@@ -38,7 +50,7 @@ export async function GET(request: Request): Promise<NextResponse> {
         email: user.email,
         firstName: user.given_name || user.email.split("@")[0],
         lastName: user.family_name || "User",
-        role: "user",
+        role: "user", // Default role
         hasSubmittedForm: false,
         status: "pending",
       };
@@ -47,8 +59,8 @@ export async function GET(request: Request): Promise<NextResponse> {
 
       try {
         dbAnalyst = new Analyst(analystData);
-        await dbAnalyst.validate();
-        dbAnalyst = await dbAnalyst.save();
+        await dbAnalyst.validate(); // Enforce validation
+        dbAnalyst = await dbAnalyst.save(); // Save the document
         console.log("New analyst created:", dbAnalyst);
       } catch (error) {
         console.error("Error creating analyst:", error);
@@ -56,6 +68,7 @@ export async function GET(request: Request): Promise<NextResponse> {
       }
     }
 
+    // Log the final analyst data
     console.log("Final analyst data:", {
       id: dbAnalyst._id,
       email: dbAnalyst.email,
@@ -63,29 +76,34 @@ export async function GET(request: Request): Promise<NextResponse> {
       hasSubmittedForm: dbAnalyst.hasSubmittedForm,
     });
 
+    // Determine redirect URL based on role and returnTo parameter
     const baseUrl = process.env.NEXT_PUBLIC_APP_URL;
     let redirectPath;
 
     if (dbAnalyst.role === "admin") {
+      console.log("User is admin, redirecting to dashboard");
       redirectPath = "/dashboard";
     } else if (returnTo && returnTo.startsWith('/')) {
+      console.log("Redirecting to return URL:", returnTo);
       redirectPath = returnTo;
     } else {
+      console.log("Default redirect to home");
       redirectPath = "/";
     }
 
     const redirectUrl = new URL(redirectPath, baseUrl);
-    console.log(`Redirecting ${dbAnalyst.role} to:`, redirectUrl.toString());
+    console.log("Final redirect URL:", redirectUrl.toString());
     
-    return NextResponse.redirect(redirectUrl, {
-      status: 302,
-      headers: {
-        'Cache-Control': 'no-store, max-age=0',
-      },
-    });
+    return NextResponse.redirect(redirectUrl);
 
   } catch (error) {
     console.error("Error in success handler:", error);
+    // Log additional error details
+    if (error instanceof Error) {
+      console.error("Error name:", error.name);
+      console.error("Error message:", error.message);
+      console.error("Error stack:", error.stack);
+    }
     return NextResponse.redirect(new URL('/', process.env.NEXT_PUBLIC_APP_URL!));
   }
 }
