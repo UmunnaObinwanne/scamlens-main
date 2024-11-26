@@ -1,10 +1,10 @@
 
 import { Hero } from "@/components/hero";
 import { SocialProof } from "@/components/social-proof";
-import { Features } from "@/components/features-section";
 import { Testimonials } from "@/components/testimonials";
 import { Faq } from "@/components/faq";
 import HowItWorks from "@/components/HowItWorks";
+import { MainFeatures } from "@/components/Features/MainFeatures";
 
 
 export default function HomePage() {
@@ -14,7 +14,7 @@ export default function HomePage() {
       <Hero />
       <SocialProof />
       <HowItWorks/>
-      <Features />
+      <MainFeatures />
       <Testimonials />
       <Faq />
     </>

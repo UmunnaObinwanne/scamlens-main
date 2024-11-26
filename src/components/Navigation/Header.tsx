@@ -17,6 +17,7 @@ import { UserProfile as UserProfileType } from "../../../Types/user";
 export async function MainHeader() {
   const { isAuthenticated, getUser } = getKindeServerSession();
 const userFromKinde = await getUser();
+console.log("User from Kinde", userFromKinde)
   
   // Transform Kinde user to match our UserProfile type
   const user: UserProfileType | null = userFromKinde ? {
@@ -40,6 +41,7 @@ const userFromKinde = await getUser();
   }
 
   const isAdmin = dbUser?.role === 'admin';
+  console.log("Is Admin?", isAdmin)
 
   return (
     <header className="sticky top-0 z-50 w-full border-b bg-background/95 backdrop-blur supports-[backdrop-filter]:bg-background/60">

@@ -1,49 +1,16 @@
-// components/Features.tsx
-import { Heart, ShoppingBag, Globe } from "lucide-react";
-import { getKindeServerSession } from "@kinde-oss/kinde-auth-nextjs/server";
-
-// Define categories outside the component to avoid recreation
-export const categories = [
-  {
-    icon: <Heart size={24} className="text-primary" />,
-    title: "Romance Partner",
-    description: "Met someone online? Before investing emotions or money, let us help verify their identity and protect you from romance scams.",
-    href: "/romance-verify"
-  },
-  {
-    icon: <ShoppingBag size={24} className="text-primary" />,
-    title: "Online Vendor",
-    description: "Found a great deal online? Let us verify the seller's credibility before you make a purchase and protect your money.",
-    href: "/onlinevendor"
-  },
-  {
-    icon: <Globe size={24} className="text-primary" />,
-    title: "Online Platform",
-    description: "Considering an investment, course, or service? We'll help verify the platform's legitimacy and check for red flags.",
-    href: "/onlineplatform-verify"
-  },
-];
-
-// Server Component
-export async function Features() {
-  const { isAuthenticated } = getKindeServerSession();
-  const authenticated = await isAuthenticated();
-
-  return <FeaturesList isAuthenticated={authenticated} />;
-}
-
-// Client Component
+// components/features/features-list.tsx
 "use client";
 
 import Link from "next/link";
 import { Button } from "@/components/ui/button";
 import { LoginLink } from "@kinde-oss/kinde-auth-nextjs/components";
+import { categories } from "./Constants";
 
 interface FeaturesListProps {
   isAuthenticated: boolean;
 }
 
-function FeaturesList({ isAuthenticated }: FeaturesListProps) {
+export function FeaturesList({ isAuthenticated }: FeaturesListProps) {
   return (
     <section className="container flex flex-col items-center gap-6 py-24 sm:gap-7">
       <div className="flex flex-col gap-3">

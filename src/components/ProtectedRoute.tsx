@@ -9,6 +9,7 @@ export async function ProtectedRoute({
 }) {
   const { getUser } = getKindeServerSession();
   const user = await getUser();
+  console.log(user)
 
   if (!user) {
     redirect('/');
