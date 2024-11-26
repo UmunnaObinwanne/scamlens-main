@@ -1,53 +1,39 @@
 // middleware.ts
-
-/*
-import { authMiddleware, withAuth } from "@kinde-oss/kinde-auth-nextjs/middleware";
+import { withAuth } from "@kinde-oss/kinde-auth-nextjs/middleware";
 import { NextResponse } from "next/server";
 
-export default async function middleware(request: Request) {
-  // First, apply Kinde's auth middleware
-  const authResult = await withAuth(request);
+export default withAuth({
+  afterAuth(auth, req) {
+    // Get the pathname of the request
+    const path = req.nextUrl.pathname;
 
-  const protectedPaths = [
-    "/romance-verify",
-    "/onlinevendor",
-    "/onlineplatform-verify",
-    "/verify/phone",
-  ];
+    // Protected paths that require authentication
+    const protectedPaths = [
+      "/dashboard",
+      "/romance-verify",
+      "/onlinevendor",
+      "/onlineplatform-verify",
+      "/verify/phone",
+    ];
 
-  const path = new URL(request.url).pathname;
+    // Check if the path is protected
+    const isProtectedPath = protectedPaths.some(prefix => path.startsWith(prefix));
 
-  // All protected routes require authentication
-  if (protectedPaths.some(prefix => path.startsWith(prefix)) || path.includes('/dashboard')) {
-    return authResult;
-  }
+    // If it's a protected path and user is not authenticated, redirect to login
+    if (isProtectedPath && !auth.userId) {
+      return NextResponse.redirect(new URL('/api/auth/login', req.url));
+    }
 
-  return NextResponse.next();
-}
+    return NextResponse.next();
+  },
+});
 
 export const config = {
   matcher: [
-    "/dashboard",
-    "/romance-verify",
-    "/onlinevendor",
-    "/onlineplatform-verify",
-    "/verify/phone",
-    "/api/auth/success",
-     '/api/auth/(.*)',  // This catches all auth routes
+    '/dashboard',
+    '/romance-verify',
+    '/onlinevendor',
+    '/onlineplatform-verify',
+    '/verify/phone',
   ]
-};
-
-*/
-
-import {
-  authMiddleware,
-  withAuth,
-} from "@kinde-oss/kinde-auth-nextjs/middleware";
-
-export default function middleware(req: Request) {
-  return withAuth(req);
-}
-
-export const config = {
-  matcher: ["/dashboard"],
 };
