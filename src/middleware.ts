@@ -1,9 +1,9 @@
 // middleware.ts
 import { withAuth } from "@kinde-oss/kinde-auth-nextjs/middleware";
-import { NextResponse } from "next/server";
+import { NextResponse, NextRequest } from "next/server";
 
 export default withAuth({
-  afterAuth(auth, req) {
+  afterAuth(auth:any, req:NextRequest) {
     // Get the pathname of the request
     const path = req.nextUrl.pathname;
 
