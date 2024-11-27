@@ -9,9 +9,10 @@ interface KindeAuth {
 
 export default withAuth({
   afterAuth(auth: KindeAuth, req: NextRequest) {
+    // Get the current path
     const path = req.nextUrl.pathname;
-
-    // Public routes that don't require authentication
+    
+    // Skip middleware for auth-related paths and public routes
     if (path === '/' || path.startsWith('/api/auth/')) {
       return NextResponse.next();
     }
@@ -28,7 +29,11 @@ export default withAuth({
       path.startsWith(prefix)
     );
 
-    if (isProtectedPath && !auth.isAuthenticated) {
+    // Check auth status
+    const isAuthenticated = auth.isAuthenticated || 
+                          req.cookies.get('kinde_auth') !== undefined;
+
+    if (isProtectedPath && !isAuthenticated) {
       const loginUrl = new URL('/api/auth/login', req.url);
       loginUrl.searchParams.set('post_login_redirect_url', path);
       return NextResponse.redirect(loginUrl);

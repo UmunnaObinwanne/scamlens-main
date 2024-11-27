@@ -9,6 +9,7 @@ export async function ProtectedRoute({
 }) {
   const { getUser } = getKindeServerSession();
   const user = await getUser();
+  console.log("protected route user", user)
   console.log(user)
 
   if (!user) {
