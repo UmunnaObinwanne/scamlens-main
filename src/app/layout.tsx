@@ -7,6 +7,7 @@ import type { Metadata } from "next";
 import { Inter } from "next/font/google";
 import localFont from "next/font/local";
 import { cn } from "@/lib/utils";
+import { AuthProvider } from "./AuthProvider";
 
 const fontSans = Inter({
   variable: "--font-sans",
@@ -34,6 +35,7 @@ export default function RootLayout({
   children: React.ReactNode;
 }>) {
   return (
+    <AuthProvider>
     <html lang="en">
       <body
         className={cn(
@@ -46,6 +48,7 @@ export default function RootLayout({
         {children}
         <Footer />
       </body>
-    </html>
+      </html>
+      </AuthProvider>
   );
 }
