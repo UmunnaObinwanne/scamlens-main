@@ -35,7 +35,7 @@ export default function RootLayout({
   children: React.ReactNode;
 }>) {
   return (
-    <AuthProvider>
+ 
     <html lang="en">
       <body
         className={cn(
@@ -44,11 +44,12 @@ export default function RootLayout({
           fontHeading.variable
         )}
       >
+           <AuthProvider>
         <MainHeader/>
         {children}
-        <Footer />
+          <Footer />
+          </AuthProvider>
       </body>
       </html>
-      </AuthProvider>
   );
 }
