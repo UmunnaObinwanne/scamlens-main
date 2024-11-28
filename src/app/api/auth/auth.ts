@@ -3,7 +3,7 @@ import Credentials from "next-auth/providers/credentials";
 import bcrypt from "bcryptjs";
 import { connectToMongoDB } from "../../../../Lib/db";
 import Analyst from "../../../../Models/AnalystsSchema";
-import { Types } from 'mongoose';
+
 
 async function verifyPassword(plainPassword: string, hashedPassword: string) {
   try {
