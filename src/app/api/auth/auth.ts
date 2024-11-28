@@ -146,3 +146,6 @@ export const { handlers, signIn, signOut, auth } = NextAuth({
     maxAge: 30 * 24 * 60 * 60,
   }
 });
+
+export const GET = auth;
+export const POST = auth;
