@@ -3,23 +3,9 @@
 
 import Link from "next/link";
 import { Button } from "@/components/ui/button";
-import { LoginLink } from "@kinde-oss/kinde-auth-nextjs/components";
 import { categories } from "./Constants";
-import { useRouter } from "next/navigation";
 
-interface FeaturesListProps {
-  isAuthenticated: boolean;
-}
-
-export function FeaturesList({ isAuthenticated }: FeaturesListProps) {
-    const router = useRouter();
-
-  const handleVerifyClick = (href: string) => {
-    if (isAuthenticated) {
-      router.push(href);
-    }
-  };
-
+export function FeaturesList() {
   return (
     <section className="container flex flex-col items-center gap-6 py-24 sm:gap-7">
       <div className="flex flex-col gap-3">
@@ -62,23 +48,11 @@ export function FeaturesList({ isAuthenticated }: FeaturesListProps) {
               {category.description}
             </p>
 
-                   {isAuthenticated ? (
-              <Button 
-                className="mt-4 mx-10"
-                onClick={() => handleVerifyClick(category.href)}
-              >
-                Verify Now
+            <Link href={category.href}>
+              <Button className="mt-4 mx-10 w-full">
+                Verify
               </Button>
-            ) : (
-              <LoginLink
-                postLoginRedirectURL={`/api/auth/success?returnTo=${category.href}`}
-                className="mt-4 mx-10"
-              >
-                <Button className="w-full">
-                  Verify
-                </Button>
-              </LoginLink>
-            )}
+            </Link>
           </div>
         ))}
       </div>

@@ -149,8 +149,6 @@ const ReportCard = ({ report }: { report: Report }) => (
                         report.location.toLowerCase().includes(searchTerm.toLowerCase());
    const matchesStatus = filterStatus === 'all' || report.status === filterStatus;
    return matchesSearch && matchesStatus;
-
-   console.log(filteredReports)
  });
 
  return (

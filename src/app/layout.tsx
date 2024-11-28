@@ -1,13 +1,13 @@
 import "./globals.css";
 import { Header } from "@/components/header";
-import { MainHeader } from "@/components/Navigation/Header";
 import { Footer } from "@/components/footer";
+import { MainHeader } from "@/components/Navigation/Header";
+import { Providers } from "./Providers";
 
 import type { Metadata } from "next";
 import { Inter } from "next/font/google";
 import localFont from "next/font/local";
 import { cn } from "@/lib/utils";
-import { AuthProvider } from "./AuthProvider";
 
 const fontSans = Inter({
   variable: "--font-sans",
@@ -44,11 +44,11 @@ export default function RootLayout({
           fontHeading.variable
         )}
       >
-           <AuthProvider>
+        <Providers>
         <MainHeader/>
         {children}
           <Footer />
-          </AuthProvider>
+        </Providers>
       </body>
       </html>
   );
