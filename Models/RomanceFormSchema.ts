@@ -5,7 +5,7 @@ interface IImage {
     publicId: string;
 }
 
-interface IRomanceScamReport extends Document {
+export interface IRomanceScamReport extends Document {
     fullName: string;
     email: string;
     locationOfPartner?: string;

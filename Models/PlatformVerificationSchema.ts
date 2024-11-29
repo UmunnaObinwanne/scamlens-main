@@ -5,7 +5,7 @@ interface IImage {
     publicId: string;
 }
 
-interface IPlatformVerification extends Document {
+export interface IPlatformVerification extends Document {
     fullName: string;
     email: string;
     websiteURL: string;

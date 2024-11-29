@@ -6,23 +6,21 @@ import PlatformVerification from "../../../../Models/PlatformVerificationSchema"
 import SocialVendorVerification from "../../../../Models/SocialVendorSchema";
 import { auth } from "../auth/auth";
 
-export async function GET(request: Request) {
-  
+export async function GET() {
   try {
-    const session = await auth()
-    console.log("this is my session", session)
+    const session = await auth();
+    
     if (!session) {
       return NextResponse.json({ error: 'Unauthorized' }, { status: 401 });
     }
 
     await connectToMongoDB();
     
-    // Get all reports from different collections
-    const romanceReports = await RomanceScamReport.find({}).sort({ submissionDate: -1 });
-    const platformReports = await PlatformVerification.find({}).sort({ submissionDate: -1 });
-    const vendorReports = await SocialVendorVerification.find({}).sort({ submissionDate: -1 });
-
-    console.log('reports fetched', romanceReports, platformReports, vendorReports)
+    const [romanceReports, platformReports, vendorReports] = await Promise.all([
+      RomanceScamReport.find({}).sort({ submissionDate: -1 }).lean(),
+      PlatformVerification.find({}).sort({ submissionDate: -1 }).lean(),
+      SocialVendorVerification.find({}).sort({ submissionDate: -1 }).lean()
+    ]);
 
     return NextResponse.json({ 
       success: true, 

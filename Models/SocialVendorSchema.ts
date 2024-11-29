@@ -5,7 +5,7 @@ interface IImage {
     publicId: string;
 }
 
-interface ISocialVendorVerification extends Document {
+export interface ISocialVendorVerification extends Document {
     // Basic Information
     fullName: string;
     email: string;
