@@ -1,11 +1,23 @@
-// components/features/features-list.tsx
 "use client";
 
 import Link from "next/link";
 import { Button } from "@/components/ui/button";
 import { categories } from "./Constants";
+import { useRouter } from "next/navigation"; // Use next/navigation instead of next/router
+import { useSession } from "next-auth/react"; // Use useSession for client components
 
 export function FeaturesList() {
+  const router = useRouter();
+  const { data: session, status } = useSession();
+
+  const handleVerify = (href: string) => {
+    if (!session) {
+      router.push("/login");
+      return;
+    }
+    router.push(href);
+  };
+  
   return (
     <section className="container flex flex-col items-center gap-6 py-24 sm:gap-7">
       <div className="flex flex-col gap-3">
@@ -48,11 +60,12 @@ export function FeaturesList() {
               {category.description}
             </p>
 
-            <Link href={category.href}>
-              <Button className="mt-4 mx-10 w-full">
-                Verify
-              </Button>
-            </Link>
+            <Button 
+              className="mt-4 mx-10 w-full"
+              onClick={() => handleVerify(category.href)}
+            >
+              {status === 'loading' ? 'Loading...' : 'Verify'}
+            </Button>
           </div>
         ))}
       </div>
