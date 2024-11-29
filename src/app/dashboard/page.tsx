@@ -34,28 +34,35 @@ export default function DashboardPage() {
 useEffect(() => {
   async function fetchReports() {
     try {
-      // Add a leading slash and make the path absolute
+      console.log("Starting report fetch from dashboard");
       const response = await fetch('/api/reports', {
-        // Add these headers and credentials
         headers: {
           'Content-Type': 'application/json',
         },
         credentials: 'include'
       });
+      
+      console.log("API response status:", response.status);
       const data = await response.json();
-      if (data.success) {
-        const transformedReports = Object.values(data.reports).flat().map((report: any) => ({
-          _id: report._id,
-          type: report.type || determineReportType(report),
-          reportedName: report.fullName || report.name || report.vendorName,
-          date: report.submissionDate,
-          riskLevel: report.riskAssessment?.riskLevel || 'Low',
-          status: report.status || 'pending',
-          location: report.locationOfPartner || report.location || 'Unknown'
-        }));
-        setReports(transformedReports);
-        console.log("transformed reports", transformedReports)
+      console.log("API response data:", data);
+
+      if (!data.success) {
+        console.error("API error:", data.error);
+        return;
       }
+
+      const transformedReports = Object.values(data.reports).flat().map((report: any) => ({
+        _id: report._id,
+        type: report.type || determineReportType(report),
+        reportedName: report.fullName || report.name || report.vendorName,
+        date: report.submissionDate,
+        riskLevel: report.riskAssessment?.riskLevel || 'Low',
+        status: report.status || 'pending',
+        location: report.locationOfPartner || report.location || 'Unknown'
+      }));
+
+      console.log("Transformed reports:", transformedReports);
+      setReports(transformedReports);
     } catch (error) {
       console.error('Error fetching reports:', error);
     } finally {

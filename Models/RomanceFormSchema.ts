@@ -168,7 +168,11 @@ const RomanceFormSchema: Schema = new Schema({
             photoURL: { type: String }
         }
     }
-});
+},
+{
+    collection: 'romancescamreports' // Add this line to match your DB collection name
+}
+);
 
 // Add indexes for better query performance
 RomanceFormSchema.index({ email: 1 });
