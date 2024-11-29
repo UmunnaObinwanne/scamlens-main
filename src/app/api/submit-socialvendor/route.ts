@@ -192,11 +192,16 @@ function analyzeSocialVendorRisk(formData: any): RiskAssessment {
 }
 
 export async function POST(request: NextRequest) {
-  await connectToMongoDB();
+  
 
   try {
+    console.log("API received request")
+    await connectToMongoDB();
+
+    console.log("API: Connected to MongoDB")
+
     const formData = await request.formData();
-    
+    console.log("API: Form data recevied")
     // Handle screenshots upload
     let screenshotsData = [];
     const screenshotFiles = formData.getAll('screenshots');

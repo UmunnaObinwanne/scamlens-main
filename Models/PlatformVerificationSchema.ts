@@ -60,10 +60,6 @@ const PlatformVerificationSchema = new Schema({
     websiteURL: {
         type: String,
         required: true,
-        match: [
-            /^(https?:\/\/)?([\da-z.-]+)\.([a-z.]{2,6})([/\w .-]*)*\/?$/,
-            'Please enter a valid URL'
-        ]
     },
     platformType: {
         type: String,
@@ -125,7 +121,11 @@ const PlatformVerificationSchema = new Schema({
         hasScreenshot: { type: Boolean, required: true },
         screenshotURL: { type: String, required: true }
     }
-});
+},
+{
+    collection: 'platformverifications' // Add this line to match your DB collection name
+}
+);
 
 // Indexes remain the same...
 

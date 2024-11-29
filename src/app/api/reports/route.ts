@@ -22,6 +22,8 @@ export async function GET() {
       SocialVendorVerification.find({}).sort({ submissionDate: -1 }).lean()
     ]);
 
+    console.log(romanceReports, platformReports, vendorReports)
+
     return NextResponse.json({ 
       success: true, 
       reports: {

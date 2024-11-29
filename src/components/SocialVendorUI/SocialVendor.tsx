@@ -105,64 +105,10 @@ const SocialVendorForm = () => {
     }
   };
 
-  const handleSubmit = async (values: any, { setSubmitting, resetForm }: any) => {
-    try {
-      setShowLoader(true);
-      setError(null);
-      
-      const formData = new FormData();
-      
-      // Append all non-file fields
-      Object.keys(values).forEach((key) => {
-        if (key !== 'screenshots') {
-          if (Array.isArray(values[key])) {
-            values[key].forEach((value: any) => {
-              formData.append(key, value);
-            });
-          } else {
-            formData.append(key, values[key].toString());
-          }
-        }
-      });
-      
-      // Append screenshots
-      values.screenshots.forEach((file: File) => {
-        formData.append('screenshots', file);
-      });
-
-      const response = await fetch('/api/submit-socialvendor', {
-        method: 'POST',
-        body: formData,
-      });
-
-      const data = await response.json();
-
-      if (!response.ok) {
-        throw new Error(data.error || 'Submission failed');
-      }
-
-      if (data.success) {
-        // Reset form
-        resetForm();
-        if (fileInputRef.current) {
-          fileInputRef.current.value = '';
-        }
-        setPreviewUrls([]);
-
-        // Store report data and redirect
-        localStorage.setItem('vendorReport', JSON.stringify(data.report));
-        localStorage.setItem('vendorRiskAssessment', JSON.stringify(data.riskAssessment));
-        router.push('/vendorreport');
-      }
-
-    } catch (error: any) {
-      console.error('Error:', error);
-      setError(error.message || 'Submission failed. Please try again.');
-    } finally {
-      setShowLoader(false);
-      setSubmitting(false);
-    }
-  };
+const handleSubmit = async () => {
+console.log("Trying shit out")
+}
+    
 
   return (
     <div className="form-container">
