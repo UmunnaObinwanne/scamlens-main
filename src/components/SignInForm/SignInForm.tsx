@@ -10,48 +10,54 @@ import Link from 'next/link';
 function LoginContent() {
   const router = useRouter();
   const searchParams = useSearchParams();
-    const [error, setError] = useState('');
-    const [message, setMessage] = useState('');
+  const [error, setError] = useState('');
+  const [message, setMessage] = useState('');
   const [loading, setLoading] = useState(false);
 
   useEffect(() => {
     setMessage(searchParams.get('message') as string);
   }, [searchParams]);
 
-const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
-  e.preventDefault();
-  setError('');
-  setLoading(true);
+  // Get the callback URL or return URL from search params
+  const callbackUrl = searchParams.get('callbackUrl');
+  const returnUrl = searchParams.get('returnUrl');
+  const redirectUrl = callbackUrl || returnUrl || '/';
 
-  const formData = new FormData(e.currentTarget);
-  try {
-    const result = await signIn('credentials', {
-      email: formData.get('email') as string,
-      password: formData.get('password') as string,
-      redirect: false,
-    });
+  const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
+    e.preventDefault();
+    setError('');
+    setLoading(true);
 
-    if (result?.error) {
-      setError('Invalid email or password');
+    const formData = new FormData(e.currentTarget);
+    try {
+      const result = await signIn('credentials', {
+        email: formData.get('email') as string,
+        password: formData.get('password') as string,
+        redirect: false,
+        callbackUrl: redirectUrl, // Pass the redirect URL to NextAuth
+      });
+
+      if (result?.error) {
+        setError('Invalid email or password');
+        setLoading(false);
+        return;
+      }
+      
+      if (result?.ok) {
+        // Wait for session to update before redirecting
+        await new Promise(resolve => setTimeout(resolve, 100));
+        router.push(decodeURIComponent(redirectUrl));
+        router.refresh(); // Force a refresh of the navigation
+      } else {
+        setError('Authentication failed');
+        setLoading(false);
+      }
+    } catch (error) {
+      console.error("Sign-in error", error);
+      setError('An error occurred during sign-in');
       setLoading(false);
-      return;
     }
-    
-    if (result?.ok) {
-      // Wait for session to update before redirecting
-      await new Promise(resolve => setTimeout(resolve, 100));
-      router.push('/dashboard');
-      router.refresh(); // Force a refresh of the navigation
-    } else {
-      setError('Authentication failed');
-      setLoading(false);
-    }
-  } catch (error) {
-    console.error("Sign-in error", error);
-    setError('An error occurred during sign-in');
-    setLoading(false);
-  }
-};
+  };
 
 
   return (

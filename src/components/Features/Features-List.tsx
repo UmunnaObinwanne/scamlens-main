@@ -12,12 +12,14 @@ export function FeaturesList() {
 
   const handleVerify = (href: string) => {
     if (!session) {
-      router.push("/login");
+      // Encode the return URL and add it to the login redirect
+ const returnUrl = encodeURIComponent(href);
+    router.push(`/login?returnUrl=${returnUrl}`);
       return;
     }
     router.push(href);
   };
-  
+
   return (
     <section className="container flex flex-col items-center gap-6 py-24 sm:gap-7">
       <div className="flex flex-col gap-3">
@@ -34,10 +36,10 @@ export function FeaturesList() {
 
       <div className="relative z-10 mx-auto grid max-w-7xl grid-cols-1 gap-y-8 gap-x-8 md:grid-cols-2 lg:grid-cols-3 lg:justify-center">
         {categories.map((category, index) => (
-          <div 
-            key={index} 
-            className="group/feature relative flex flex-col py-10 hover:shadow-lg transition-all duration-300 ease-in-out first:lg:border-l"
-          >
+         <div 
+  key={index} 
+  className="group/feature relative flex flex-col py-10 overflow-hidden rounded-lg hover:shadow-lg transition-all duration-300 ease-in-out first:lg:border-l bg-background"
+>
             <div className="pointer-events-none absolute inset-0 size-full from-primary/20 to-transparent 
                           opacity-0 transition duration-200 group-hover/feature:opacity-100 bg-gradient-to-t" />
             
