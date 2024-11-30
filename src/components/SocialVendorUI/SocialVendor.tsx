@@ -1,7 +1,7 @@
 "use client"
 
-import React, { useRef, useState } from 'react';
-import { Formik, Form as FormikForm, Field, ErrorMessage } from 'formik';
+import React, { useRef, useState, useEffect } from 'react';
+import { Formik, Form, Field, ErrorMessage } from 'formik';
 import * as Yup from 'yup';
 import { useRouter } from 'next/navigation';
 import Image from 'next/image';
@@ -50,6 +50,7 @@ const SocialVendorForm = () => {
   const [showLoader, setShowLoader] = useState(false);
   const [error, setError] = useState<string | null>(null);
   const [previewUrls, setPreviewUrls] = useState<string[]>([]);
+
 
   const initialValues = {
     fullName: '',
@@ -105,10 +106,86 @@ const SocialVendorForm = () => {
     }
   };
 
-const handleSubmit = async () => {
-console.log("Trying shit out")
-}
-    
+const handleSubmit = async (values: any, { setSubmitting, resetForm }: any) => {
+    console.log('Submit triggered with values:', values);
+    try {
+      setShowLoader(true);
+      setError(null);
+
+      const formData = new FormData();
+
+      // Debug log to see all values
+      console.log("All form values:", values);
+
+      // Add all fields to FormData
+      Object.entries(values).forEach(([key, value]) => {
+        // Handle arrays (like paymentMethods and deliveryMethod)
+        if (Array.isArray(value)) {
+          value.forEach(item => {
+            formData.append(key, item);
+          });
+        } 
+        // Handle booleans
+        else if (typeof value === 'boolean') {
+          formData.append(key, value ? 'true' : 'false');
+        }
+        // Handle normal strings and numbers
+        else if (value !== null && value !== undefined && key !== 'screenshots') {
+          formData.append(key, value.toString());
+        }
+      });
+
+      // Handle screenshots separately
+      if (values.screenshots?.length) {
+        values.screenshots.forEach((file: File) => {
+          formData.append('screenshots', file);
+        });
+      }
+
+      // Debug log to verify FormData content
+      console.log("FormData entries:");
+      for (let pair of formData.entries()) {
+        console.log(pair[0], pair[1]);
+      }
+
+      const response = await fetch('/api/submit-socialvendor', {
+        method: 'POST',
+        body: formData,
+      });
+
+      const data = await response.json();
+      console.log('API Response:', data);
+
+      if (!response.ok) {
+        throw new Error(data.error || 'Submission failed');
+      }
+
+      if (data.success) {
+        resetForm();
+        if (fileInputRef.current) {
+          fileInputRef.current.value = '';
+        }
+        setPreviewUrls([]);
+        if (data.report && data.riskAssessment) {
+          localStorage.setItem('vendorReport', JSON.stringify(data.report));
+          localStorage.setItem('vendorRiskAssessment', JSON.stringify(data.riskAssessment));
+          
+          setTimeout(() => {
+            router.push('/vendorreport');
+          }, 1500);
+        } else {
+          throw new Error('Report data is incomplete');
+        }
+      }
+
+    } catch (error: any) {
+      console.error('Submission error:', error);
+      setError(error.message || 'Submission failed. Please try again.');
+    } finally {
+      setShowLoader(false);
+      setSubmitting(false);
+    }
+};
 
   return (
     <div className="form-container">
@@ -125,8 +202,8 @@ console.log("Trying shit out")
         validationSchema={validationSchema}
         onSubmit={handleSubmit}
       >
-        {({ isSubmitting, values, setFieldValue }) => (
-          <FormikForm className="verification-form">
+        {({ isSubmitting, setFieldValue }) => (
+          <Form noValidate className="verification-form">
             {/* Basic Information */}
             <div className="form-section">
               <h2 className="section-title">Basic Information</h2>
@@ -410,12 +487,12 @@ console.log("Trying shit out")
 
             <button 
               type="submit" 
-              disabled={isSubmitting || showLoader}
+              disabled={showLoader}
               className="submit-button"
             >
-              {isSubmitting || showLoader ? 'Verifying...' : 'Submit Report'}
+              {showLoader ? 'Verifying...' : 'Submit Now'}
             </button>
-          </FormikForm>
+          </Form>
         )}
       </Formik>
 
