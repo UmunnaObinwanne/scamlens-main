@@ -12,19 +12,16 @@ export function MobileNavbar({ children }: MobileNavbarProps) {
   const [isOpen, setIsOpen] = useState(false);
 
   return (
-    <>
+    <div className="md:hidden">
       <button 
-        className="md:hidden p-2 hover:bg-accent rounded-md"
+        className="p-2 hover:bg-accent rounded-md"
         onClick={() => setIsOpen(!isOpen)}
+        aria-expanded={isOpen}
       >
         {isOpen ? <X className="h-6 w-6" /> : <Menu className="h-6 w-6" />}
       </button>
       
-      {isOpen && (
-        <div className="absolute left-0 right-0 top-16 bg-background border-t md:hidden">
-          {children}
-        </div>
-      )}
-    </>
+      {isOpen && children}
+    </div>
   );
 }
