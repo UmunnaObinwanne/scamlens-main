@@ -11,6 +11,11 @@ export function MobileNav({ session, isAdmin }: MobileNavProps) {
   return (
     <div className="fixed inset-x-0 top-[64px] bottom-0 z-[100] bg-background/95 backdrop-blur supports-[backdrop-filter]:bg-background/60">
       <div className="flex flex-col h-[calc(100vh-4rem)] overflow-y-auto">
+        {/* Auth buttons moved to top */}
+        <div className="border-b p-4 bg-background">
+          <AuthButtons session={session} />
+        </div>
+
         <nav className="flex-1 p-4">
           <div className="flex flex-col space-y-4">
             {isAdmin && (
@@ -24,10 +29,6 @@ export function MobileNav({ session, isAdmin }: MobileNavProps) {
             {/* Add more nav items here */}
           </div>
         </nav>
-        
-        <div className="border-t p-4 bg-background">
-          <AuthButtons session={session} />
-        </div>
       </div>
     </div>
   );
