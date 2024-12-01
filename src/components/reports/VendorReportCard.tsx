@@ -1,9 +1,15 @@
-import { InfoField } from "./InfoField";
-
+//import { InfoField } from "./InfoField";
+import { ReactNode } from "react";
 // Types
 interface ScreenshotType {
   url: string;
   publicId: string;
+}
+
+interface InfoFieldProps {
+  label: string;
+  value: ReactNode;
+  className?: string;
 }
 
 interface RiskAssessment {
@@ -42,6 +48,15 @@ interface VendorReportProps {
     submissionDate: string;
   };
 }
+
+
+
+ const InfoField = ({ label, value, className = '' }: InfoFieldProps) => (
+  <div className={`flex justify-between items-center ${className}`}>
+    <span className="text-gray-600">{label}</span>
+    <span className="font-medium">{value}</span>
+  </div>
+);
 
 export const VendorReportCard = ({ report }: VendorReportProps) => {
   const getRiskLevelColor = (level: string) => {

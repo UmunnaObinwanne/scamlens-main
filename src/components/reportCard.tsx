@@ -94,8 +94,8 @@ export function ReportCard({ report, type, onStatusUpdate }: ReportCardProps) {
     <CardContent className="pt-6">
       <div className="flex justify-between items-start mb-4">
         <div>
-          <h3 className="font-semibold text-lg">{report.vendorName || 'No Name'}</h3>
-          <p className="text-sm text-gray-500">{report.platform || 'Platform Unknown'}</p>
+          <h3 className="font-semibold text-lg">{report.fullName || 'No Name'}</h3>
+          <p className="text-sm text-gray-500">{report.email || 'Platform Unknown'}</p>
         </div>
         <Badge variant="outline">{status}</Badge>
       </div>
