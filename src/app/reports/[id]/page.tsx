@@ -1,4 +1,3 @@
-// app/reports/[id]/page.tsx
 "use client"
 
 import { useEffect, useState } from 'react';
@@ -14,8 +13,6 @@ import { InfoField } from '@/components/reports/InfoField';
 import Link from 'next/link';
 import { ArrowLeft } from 'lucide-react';
 
-
-
 export default function ReportDetails() {
     const { id } = useParams();
     const [report, setReport] = useState<RomanceReport | PlatformReport | VendorReport | null>(null);
@@ -26,10 +23,8 @@ export default function ReportDetails() {
             try {
                 const response = await fetch(`/api/reports/${id}`);
                 const data = await response.json();
-                console.log('Fetched Data:', data);  // Debug log
                 if (data.success) {
                     setReport(data.report);
-                    console.log('setReport', data.report)
                 }
             } catch (error) {
                 console.error('Error fetching report:', error);
@@ -61,88 +56,93 @@ export default function ReportDetails() {
         }
     };
 
-const determineReportType = (report: any) => {
-    console.log('Determining type for:', report);  // Debug log
-    if ('personName' in report) {
-        console.log('Detected as romance');  // Debug log
-        return 'romance';
-    }
-    if ('websiteURL' in report) {  // Changed from platform check
-        console.log('Detected as platform');  // Debug log
-        return 'platform';
-    }
-    console.log('Detected as vendor');  // Debug log
-    return 'vendor';
-};
-    if (loading) {
-        return <div>Loading...</div>;
-    }
+    const determineReportType = (report: any) => {
+        if ('personName' in report) return 'romance';
+        if ('websiteURL' in report) return 'platform';
+        if ('accountUsername' in report) return 'vendor';
+    };
 
-    if (!report) {
-        return <div>Report not found</div>;
-    }
+    const renderContent = () => {
+        if (loading) {
+            return (
+                <div className="flex items-center justify-center min-h-[600px]">
+                    <div className="space-y-4 w-full max-w-3xl">
+                        <div className="h-8 bg-gray-200 rounded animate-pulse" />
+                        <div className="h-64 bg-gray-200 rounded animate-pulse" />
+                        <div className="h-32 bg-gray-200 rounded animate-pulse" />
+                    </div>
+                </div>
+            );
+        }
+
+        if (!report) {
+            return (
+                <div className="flex items-center justify-center min-h-[600px]">
+                    <div className="text-center">
+                        <h2 className="text-xl font-semibold text-gray-700">Report not found</h2>
+                        <p className="text-gray-500 mt-2">The requested report could not be found.</p>
+                    </div>
+                </div>
+            );
+        }
+
+        return (
+            <Card>
+                <CardHeader className="flex justify-between items-center">
+                    <div>
+                        <h1 className="text-2xl font-bold">
+                            {(() => {
+                                if ('personName' in report) return (report as RomanceReport).fullName;
+                                if ('websiteURL' in report) return (report as PlatformReport).name;
+                                if ('accountUsername' in report) return (report as VendorReport).accountUsername;
+                                return 'Unknown Report';
+                            })()}
+                        </h1>
+                        <p className="text-gray-500">
+                            Submitted on {new Date(report.submissionDate).toLocaleDateString()}
+                        </p>
+                    </div>
+                    <Select value={report.status} onValueChange={handleStatusChange}>
+                        <SelectTrigger className="w-[180px]">
+                            <SelectValue placeholder="Update status" />
+                        </SelectTrigger>
+                        <SelectContent>
+                            <SelectItem value="pending">Pending</SelectItem>
+                            <SelectItem value="in-review">In Review</SelectItem>
+                            <SelectItem value="completed">Completed</SelectItem>
+                        </SelectContent>
+                    </Select>
+                </CardHeader>
+
+                <CardContent>
+                    {(() => {
+                        const reportType = determineReportType(report);
+                        switch(reportType) {
+                            case 'romance':
+                                return <RomanceReportCard report={report as RomanceReport} />;
+                            case 'platform':
+                                return <PlatformReportCard report={report as PlatformReport} />;
+                            case 'vendor':
+                                return <VendorReportCard report={report as VendorReport} />;
+                            default:
+                                return <div>Unknown report type</div>;
+                        }
+                    })()}
+                </CardContent>
+            </Card>
+        );
+    };
 
     return (
- 
-        <div className="container mx-auto p-6">
-                   <Link 
- href="/dashboard" 
- className="inline-flex items-center text-blue-600 hover:text-blue-700 mb-4"
->
- <ArrowLeft className="h-4 w-4 mr-2" />
- Back to Dashboard
-</Link>
-            <Card>
-<CardHeader className="flex justify-between items-center">
-    <div>
-        <h1 className="text-2xl font-bold">
-            {(() => {
-                if ('personName' in report) {
-                    return (report as RomanceReport).fullName;
-                }
-                if ('websiteURL' in report) {
-                    return (report as PlatformReport).name;
-                }
-                if ('vendorName' in report) {
-                    return (report as VendorReport).vendorName;
-                }
-                return 'Unknown Report';
-            })()}
-        </h1>
-        <p className="text-gray-500">
-            Submitted on {new Date(report.submissionDate).toLocaleDateString()}
-        </p>
-    </div>
-    <Select value={report.status} onValueChange={handleStatusChange}>
-        <SelectTrigger className="w-[180px]">
-            <SelectValue placeholder="Update status" />
-        </SelectTrigger>
-        <SelectContent>
-            <SelectItem value="pending">Pending</SelectItem>
-            <SelectItem value="in-review">In Review</SelectItem>
-            <SelectItem value="completed">Completed</SelectItem>
-        </SelectContent>
-    </Select>
-</CardHeader>
-
-<CardContent>
-    {(() => {
-        const reportType = determineReportType(report);
-        console.log('Report Type:', reportType);  // Debug log
-        switch(reportType) {
-            case 'romance':
-                return <RomanceReportCard report={report as RomanceReport} />;
-            case 'platform':
-                return <PlatformReportCard report={report as PlatformReport} />;
-            case 'vendor':
-                return <VendorReportCard report={report as VendorReport} />;
-            default:
-                return <div>Unknown report type</div>;
-        }
-    })()}
-</CardContent>
-
-            </Card>
+        <div className="container mx-auto p-6 min-h-screen">
+            <Link 
+                href="/dashboard" 
+                className="inline-flex items-center text-blue-600 hover:text-blue-700 mb-4"
+            >
+                <ArrowLeft className="h-4 w-4 mr-2" />
+                Back to Dashboard
+            </Link>
+            {renderContent()}
         </div>
     );
 }

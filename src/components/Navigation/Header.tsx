@@ -1,4 +1,3 @@
-// components/Header.tsx
 "use client";
 
 import Link from "next/link";
@@ -8,8 +7,16 @@ import { MobileNavbarWrapper } from "./MobileNavbarWrapper";
 import { MobileNav } from "./MobileNav";
 import AuthButtons from "../AuthButtons/AuthButtons";
 
+interface AdminPropss {
+  session: any;
+  isAdmin: boolean;
+}
+
 export function MainHeader() {
   const { data: session, status } = useSession();
+
+  // Check if user is admin
+  const isAdmin = session?.user?.email === 'iihtnigeria@gmail.com';
 
   return (
     <header className="sticky top-0 z-50 w-full border-b bg-background/95 backdrop-blur supports-[backdrop-filter]:bg-background/60">
@@ -23,7 +30,17 @@ export function MainHeader() {
 
         {/* Desktop Navigation */}
         <nav className="hidden items-center gap-6 md:flex">
-          {/* Add any public navigation links here */}
+          {isAdmin && (
+            <div className="flex items-center gap-4">
+              <Link 
+                href="/dashboard" 
+                className="text-sm font-medium text-muted-foreground transition-colors hover:text-primary"
+              >
+                Dashboard
+              </Link>
+
+            </div>
+          )}
         </nav>
 
         {/* Desktop Auth Buttons */}
@@ -34,7 +51,9 @@ export function MainHeader() {
         {/* Mobile Navigation */}
         <MobileNavbarWrapper>
           <MobileNavbar>
-            <MobileNav session={session} />
+            <MobileNav session={session} 
+            isAdmin={session?.user?.email === 'iihtnigeria@gmail.com'}
+            />
           </MobileNavbar>
         </MobileNavbarWrapper>
       </div>

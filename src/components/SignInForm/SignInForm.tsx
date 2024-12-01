@@ -29,12 +29,13 @@ function LoginContent() {
     setLoading(true);
 
     const formData = new FormData(e.currentTarget);
+    const email = formData.get('email') as string;  // Get email upfront
+
     try {
       const result = await signIn('credentials', {
-        email: formData.get('email') as string,
+        email,
         password: formData.get('password') as string,
         redirect: false,
-        callbackUrl: redirectUrl, // Pass the redirect URL to NextAuth
       });
 
       if (result?.error) {
@@ -42,12 +43,19 @@ function LoginContent() {
         setLoading(false);
         return;
       }
-      
+
       if (result?.ok) {
-        // Wait for session to update before redirecting
+        // Wait for session to update
         await new Promise(resolve => setTimeout(resolve, 100));
-        router.push(decodeURIComponent(redirectUrl));
-        router.refresh(); // Force a refresh of the navigation
+        
+        // Check the email and redirect accordingly
+        if (email === "iihtnigeria@gmail.com") {
+          router.push('/dashboard');
+        } else {
+          router.push(decodeURIComponent(redirectUrl));
+        }
+        
+        router.refresh();
       } else {
         setError('Authentication failed');
         setLoading(false);
@@ -58,8 +66,6 @@ function LoginContent() {
       setLoading(false);
     }
   };
-
-
   return (
     <div className="container flex items-center justify-center min-h-screen py-12">
       <div className="w-full max-w-md space-y-6">

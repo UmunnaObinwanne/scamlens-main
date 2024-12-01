@@ -68,43 +68,53 @@ export interface PlatformReport extends BaseReport {
 }
 
 export interface VendorReport extends BaseReport {
-  vendorName: string;
-  platform: string;
-  status: 'pending' | 'in-review' | 'completed';
-    fullName: string;
+  // Basic Information
+  fullName: string;
   email: string;
-  locationOfPartner: string;
-  country: string;
-  personName: string;
-  contactDuration: string;
-  meetingPlace: string;
-  otherMeetingPlace?: string;
-  metInRealLife: string;
-  whyNotMet?: string;
-  communicationFrequency: string;
-  discussionTopics: string;
-  sharedPhotosVideos: string;
-  photosAuthentic?: string;
-  photoUpload?: {
+  
+  // Vendor Details
+  socialMediaPlatform: 'facebook' | 'instagram' | 'tiktok' | 'whatsapp' | 'telegram' | 'other';
+  accountUsername: string;
+  accountURL: string;
+  
+  // Business Information
+  businessType: 'retail' | 'investment' | 'services' | 'dropshipping' | 'other';
+  businessCategory: string;
+  priceRange: string;
+  
+  // Payment & Delivery
+  paymentMethods: string[];
+  deliveryMethod: string[];
+  
+  // Account Verification
+  accountAge: string;
+  followersCount: string;
+  hasBusinessProfile: boolean;
+  verifiedAccount: boolean;
+  
+  // Customer Protection
+  hasRefundPolicy: boolean;
+  refundPolicyDetails?: string;
+  
+  // Risk Indicators
+  urgencyTactics: boolean;
+  limitedTimeOffers: boolean;
+  requestsPersonalBanking: boolean;
+  prePaymentRequired: boolean;
+  suspiciousFeatures: string;
+  
+  // Evidence
+  screenshots: {
     url: string;
     publicId: string;
-  };
-  askedForMoney: string;
-  moneyAmount?: number;
-  moneyPurpose?: string;
-  personalInfoShared: string;
-  suspiciousBehavior: string;
-  submissionDate: string;
+  }[];
+  
+  // Assessment
   riskAssessment: {
-        riskLevel: 'Low' | 'Medium' | 'High' | 'Critical';
-        riskFactors: string[];
-        recommendations: string[];
-        score: number;
-    };
-}
-
-export interface Reports {
-  romance: RomanceReport[];
-  platform: PlatformReport[];
-  vendor: VendorReport[];
+    riskLevel: 'Low' | 'Medium' | 'High' | 'Critical';
+    score: number;
+    riskFactors: string[];
+    recommendations: string[];
+    summary: string;
+  };
 }

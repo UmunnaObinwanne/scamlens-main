@@ -1,11 +1,25 @@
 // components/MobileNav.tsx
-"use client"; // Ensure this is a client component since it handles interactivity
-import AuthButtons from "../AuthButtons/AuthButtons"; // Reuse the AuthButtons component
+import Link from "next/link";
 
-export function MobileNav({ session }: { session: any }) {
+interface MobileNavProps {
+  session: any;
+  isAdmin?: boolean;
+}
+
+export function MobileNav({ session, isAdmin }: MobileNavProps) {
   return (
-    <div className="flex flex-col gap-4 p-4">
-      <AuthButtons session={session} /> {/* Use AuthButtons for mobile */}
+    <div className="flex flex-col space-y-4 p-4">
+      {isAdmin && (
+        <>
+          <Link 
+            href="/dashboard"
+            className="text-sm font-medium text-muted-foreground transition-colors hover:text-primary"
+          >
+            Dashboard
+          </Link>
+        </>
+      )}
+      {/* Other mobile nav items */}
     </div>
   );
 }
