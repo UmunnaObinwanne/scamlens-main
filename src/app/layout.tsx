@@ -22,7 +22,7 @@ const fontHeading = localFont({
 
 export const metadata: Metadata = {
  title: 'ScamLens',
-  description: 'Get Expert Help to Protect yourself from online scams',
+  description: 'Get Expert Help to Protect yourself from Online Scams',
   icons: {
     icon: '/images/favicon.png',
   },
